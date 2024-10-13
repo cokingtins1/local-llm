@@ -39,7 +39,7 @@
 # CMD ["npm", "start"]
 
 # Use a Node.js base image
-FROM node:18-slim
+FROM node:18-alpine
 
 # Set the working directory
 WORKDIR /app
