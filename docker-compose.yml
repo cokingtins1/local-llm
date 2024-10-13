@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+    ports:
+      - "8080:8080"  # Expose Flask port
+    volumes:
+      - ./server:/app  # Bind mount for local development
+
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"  # Expose Next.js port
+    volumes:
+      - ./client:/app  # Bind mount for local development
