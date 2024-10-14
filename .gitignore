@@ -37,3 +37,4 @@ client/next-env.d.ts
 
 server/venv
 server/models
+server/llama-cpp-python
