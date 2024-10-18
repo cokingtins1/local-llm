@@ -70,4 +70,3 @@ def query_rag(query_text: str):
         callback_manager=callback_manager,
         verbose=False,
     )
-    response_text = model.invoke
