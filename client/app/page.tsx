@@ -1,17 +1,15 @@
-"use client";
-import { Input } from "@/components/ui/input";
+import PromptForm from "@/components/custom/PromptForm";
+import { Button } from "@/components/ui/newbutton";
+import { PrismaClient } from "@prisma/client";
 
-import { promptSchema, TPromptSchema } from "@/lib/types";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import main from "./actions/main";
+const prisma = new PrismaClient();
 
 export default function Page() {
+
+
 	return (
-		<div>
-			<form action={main}>
-				<Button type="submit">Load Document</Button>
-			</form>
+		<div className="flex flex-col items-center w-full">
+			<PromptForm />
 		</div>
 	);
 }

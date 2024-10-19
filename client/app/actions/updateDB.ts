@@ -9,7 +9,7 @@ import getChunkIds from "./getChunkIds";
 import initializeDB from "./initializeDB";
 import queryDB from "./queryDB";
 
-export default async function main() {
+export default async function updateDB() {
 	async function loadDocuments(path: string) {
 		const dirLoader = new DirectoryLoader(path, {
 			".pdf": (path: string) => new PDFLoader(path),
@@ -106,11 +106,4 @@ export default async function main() {
 	const chunks = await splitText(docs);
 
 	addToDB(chunks);
-
-	const t1 = new Date().getTime();
-	const query = "how do you make a flush in poker?";
-	const t2 = new Date().getTime();
-	console.log(`Time to answer:: ${(t2 - t1) / 1000} seconds`);
-
-	const answer = await queryDB(query);
 }

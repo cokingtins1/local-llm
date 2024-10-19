@@ -5,6 +5,10 @@ import {
 	PGVectorStore,
 } from "@langchain/community/vectorstores/pgvector";
 
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
 export default async function initializeDB() {
 	const embeddings = new HuggingFaceInferenceEmbeddings({
 		apiKey: process.env.HUGGINGFACEHUB_API_KEY,

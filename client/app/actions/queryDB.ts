@@ -15,7 +15,16 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 
 import initializeDB from "./initializeDB";
 
-export default async function queryDB(query: string) {
+function getTime(t0: number, label: string) {
+	const tf = new Date().getTime();
+	console.log(`${label} : ${(tf - t0) / 1000} seconds`);
+}
+
+export default async function queryDB(
+	query: string
+): Promise<ReadableStream<string>> {
+	const t0 = new Date().getTime();
+
 	const db = await initializeDB();
 	const model = new Ollama({
 		model: "capybara",
@@ -23,10 +32,16 @@ export default async function queryDB(query: string) {
 		maxRetries: 2,
 	});
 
+	getTime(t0, "initialize db");
+	const t1 = new Date().getTime();
+
 	const results = await db.similaritySearchWithScore(query, 5);
 	const contextTextArray = await Promise.all(
 		results.map(async ([doc, _score]) => doc.pageContent)
 	);
+
+	getTime(t1, "similarity score");
+	const t2 = new Date().getTime();
 
 	const joinedContextText = contextTextArray.join("\n\n---\n\n");
 
@@ -38,7 +53,10 @@ export default async function queryDB(query: string) {
 
             ---
 
+			{context}
+
             Answer the question based on the above context: {question}
+
             `;
 
 	const promptTemplate = ChatPromptTemplate.fromTemplate(TEMPLATE);
@@ -47,32 +65,12 @@ export default async function queryDB(query: string) {
 		question: query,
 	});
 
-	// const responseText = await model.invoke(prompt);
-	console.log("responseText:", prompt);
+	getTime(t2, "chat prompt template");
+	const t3 = new Date().getTime();
 
-	const SYSTEM_TEMPLATE = `Use the following pieces of context to answer the question at the end.
-      If you don't know the answer, just say that you don't know, don't try to make up an answer. Only provide answers to questions that are relative to the provided context.
-      ----------------
-      {context}`;
+	const stream = await model.stream(prompt);
 
-	// const dbRetriever = db.asRetriever();
+	getTime(t3, "model.invoke");
 
-	// const prompt = ChatPromptTemplate.fromMessages([
-	// 	["system", SYSTEM_TEMPLATE],
-	// 	["human", "{question}"],
-	// ]);
-
-	// const chain = RunnableSequence.from([
-	// 	{
-	// 		context: dbRetriever,
-	// 		question: new RunnablePassthrough(),
-	// 	},
-	// 	prompt,
-	// 	model,
-	// 	new StringOutputParser(),
-	// ]);
-
-	// const answer = await chain.invoke(query);
-
-	return "done";
+	return stream;
 }
