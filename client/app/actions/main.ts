@@ -108,10 +108,9 @@ export default async function main() {
 	addToDB(chunks);
 
 	const t1 = new Date().getTime();
-	const query = "what are the ways you can get out of jail in monopoly?";
-
-	const answer = await queryDB(query);
+	const query = "how do you make a flush in poker?";
 	const t2 = new Date().getTime();
 	console.log(`Time to answer:: ${(t2 - t1) / 1000} seconds`);
-	console.log(answer);
+
+	const answer = await queryDB(query);
 }

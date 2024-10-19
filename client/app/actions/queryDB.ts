@@ -18,7 +18,7 @@ import initializeDB from "./initializeDB";
 export default async function queryDB(query: string) {
 	const db = await initializeDB();
 	const model = new Ollama({
-		model: "llama3.1",
+		model: "capybara",
 		temperature: 0,
 		maxRetries: 2,
 	});
@@ -47,7 +47,7 @@ export default async function queryDB(query: string) {
 		question: query,
 	});
 
-	const responseText = await model.invoke(prompt);
+	// const responseText = await model.invoke(prompt);
 	console.log("responseText:", prompt);
 
 	const SYSTEM_TEMPLATE = `Use the following pieces of context to answer the question at the end.
@@ -74,5 +74,5 @@ export default async function queryDB(query: string) {
 
 	// const answer = await chain.invoke(query);
 
-	return responseText;
+	return "done";
 }
