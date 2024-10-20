@@ -14,6 +14,7 @@ import {
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
 import initializeDB from "./initializeDB";
+import { initializePrismaDB } from './initializePrismaDB';
 
 function getTime(t0: number, label: string) {
 	const tf = new Date().getTime();
@@ -25,7 +26,8 @@ export default async function queryDB(
 ): Promise<ReadableStream<string>> {
 	const t0 = new Date().getTime();
 
-	const db = await initializeDB();
+	// const db = await initializeDB();
+	const db = await initializePrismaDB();
 	const model = new Ollama({
 		model: "capybara",
 		temperature: 0,

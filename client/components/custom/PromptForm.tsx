@@ -87,21 +87,6 @@ export default function PromptForm() {
 			<p className="text-rose-600">
 				{form.formState.errors.prompt?.message}
 			</p>
-
-			<div className="flex items-center gap-4">
-				<p>Test DB</p>
-				<form
-					action={async () => {
-						const id = "01124963-ca79-4ff5-90eb-2882783075b5";
-						const res = await prisma.langchain2.findUnique({
-							where: { id: id },
-						});
-						setData(res);
-					}}
-				>
-					<Button>Get Values</Button>
-				</form>
-			</div>
 		</div>
 	);
 }

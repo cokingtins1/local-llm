@@ -14,20 +14,10 @@ model langchain2 {
   vector   Unsupported("vector")?
 }
 
-model langchain_pg_collection {
-  uuid                   String                   @id @db.Uuid
-  name                   String                   @unique @db.VarChar
-  cmetadata              Json?                    @db.Json
-  langchain_pg_embedding langchain_pg_embedding[]
-}
-
-model langchain_pg_embedding {
-  id                      String                   @id @unique(map: "ix_langchain_pg_embedding_id") @db.VarChar
-  collection_id           String?                  @db.Uuid
-  embedding               Unsupported("vector")?
-  document                String?                  @db.VarChar
-  cmetadata               Json?
-  langchain_pg_collection langchain_pg_collection? @relation(fields: [collection_id], references: [uuid], onDelete: Cascade, onUpdate: NoAction)
-
-  @@index([cmetadata(ops: JsonbPathOps)], map: "ix_cmetadata_gin", type: Gin)
+model prismaLangChain {
+  id       String                 @id @default(uuid())
+  chunkId  String?
+  content  String?
+  metadata Json?
+  vector   Unsupported("vector")?
 }

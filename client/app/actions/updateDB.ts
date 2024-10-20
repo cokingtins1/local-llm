@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import getChunkIds from "./getChunkIds";
 import initializeDB from "./initializeDB";
 import queryDB from "./queryDB";
+import { initializePrismaDB } from "./initializePrismaDB";
 
 export default async function updateDB() {
 	async function loadDocuments(path: string) {

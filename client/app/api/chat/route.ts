@@ -1,4 +1,5 @@
 import queryDB from "@/app/actions/queryDB";
+import updatePrismaDB from "@/app/actions/updatePrismaDB";
 import { promptSchema } from "@/lib/types";
 import { NextResponse } from "next/server";
 
@@ -7,7 +8,6 @@ export async function POST(req: Request) {
 
 	const result = promptSchema.safeParse(body);
 	let zodErrors = {};
-	console.log("result.success", result.success);
 
 	if (!result.success) {
 		result.error.issues.forEach((issue) => {
@@ -23,9 +23,12 @@ export async function POST(req: Request) {
 
 	const { prompt } = result.data;
 
+	await updatePrismaDB();
 	const stream = await queryDB(prompt);
 
 	return new NextResponse(stream, {
 		headers: { "Content-Type": "text/plain" },
 	});
+
+	// return NextResponse.json({ message: "success" });
 }
