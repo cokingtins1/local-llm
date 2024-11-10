@@ -1,20 +1,7 @@
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
-import { PoolConfig } from "pg";
-import {
-	DistanceStrategy,
-	PGVectorStore,
-} from "@langchain/community/vectorstores/pgvector";
-
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { Ollama } from "@langchain/ollama";
-import {
-	RunnablePassthrough,
-	RunnableSequence,
-} from "@langchain/core/runnables";
-import { StringOutputParser } from "@langchain/core/output_parsers";
 
-import initializeDB from "./initializeDB";
-import { initializePrismaDB } from './initializePrismaDB';
+import { initializePrismaDB } from "./initializePrismaDB";
 
 function getTime(t0: number, label: string) {
 	const tf = new Date().getTime();
@@ -26,7 +13,6 @@ export default async function queryDB(
 ): Promise<ReadableStream<string>> {
 	const t0 = new Date().getTime();
 
-	// const db = await initializeDB();
 	const db = await initializePrismaDB();
 	const model = new Ollama({
 		model: "capybara",
@@ -38,6 +24,7 @@ export default async function queryDB(
 	const t1 = new Date().getTime();
 
 	const results = await db.similaritySearchWithScore(query, 5);
+	console.log("results:", results);
 	const contextTextArray = await Promise.all(
 		results.map(async ([doc, _score]) => doc.pageContent)
 	);
@@ -57,7 +44,7 @@ export default async function queryDB(
 
 			{context}
 
-            Answer the question based on the above context: {question}
+            Answer the question based on the above context; if the question is not contained on the above context, do not answer the question: {question}
 
             `;
 

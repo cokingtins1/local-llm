@@ -3,11 +3,7 @@
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { Chunk, PrismaChunk } from "@/lib/types";
-import { v4 as uuidv4 } from "uuid";
-import getChunkIds from "./getChunkIds";
-import initializeDB from "./initializeDB";
-import queryDB from "./queryDB";
+import { PrismaChunk } from "@/lib/types";
 import { initializePrismaDB } from "./initializePrismaDB";
 import { PrismaClient } from "@prisma/client";
 import { Document } from "@langchain/core/documents";

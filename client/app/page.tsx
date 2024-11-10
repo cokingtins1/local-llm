@@ -1,6 +1,6 @@
 import PromptForm from "@/components/custom/PromptForm";
 import { Button } from "@/components/ui/newbutton";
-import { langchain2, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -15,14 +15,20 @@ export default async function Page() {
 					action={async () => {
 						"use server";
 						const id = "01124963-ca79-4ff5-90eb-2882783075b5";
-						const res = await prisma.langchain2.findUnique({
-							where: { id: id },
-						});
+						// const res = await prisma.prismaLangChain.findMany({
+						// 	select: { id: true, chunkId: true, metadata: true },
+						// });
 
-						const result = res as langchain2;
+						await prisma.prismaLangChain.deleteMany({});
+						await prisma.prismaLangChain.findFirst({where: {}})
+
+						// console.dir(
+						// 	res.map((item) => item.chunkId),
+						// 	{ maxArrayLength: null }
+						// );
 					}}
 				>
-					<Button>Get Values</Button>
+					<Button>Delete Data</Button>
 				</form>
 			</div>
 		</div>

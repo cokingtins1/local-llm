@@ -1,14 +1,12 @@
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { PoolConfig } from "pg";
 import {
 	DistanceStrategy,
 	PGVectorStore,
 } from "@langchain/community/vectorstores/pgvector";
+import { ollamaEmbeddings } from "../embeddings/ollamaEmbeddings";
 
 export default async function initializeDB() {
-	const embeddings = new HuggingFaceInferenceEmbeddings({
-		apiKey: process.env.HUGGINGFACEHUB_API_KEY,
-	});
+	const embeddings = ollamaEmbeddings;
 
 	const config = {
 		postgresConnectionOptions: {

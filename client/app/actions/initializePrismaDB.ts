@@ -1,13 +1,11 @@
 import { Prisma, PrismaClient, prismaLangChain } from "@prisma/client";
 import { PrismaVectorStore } from "@langchain/community/vectorstores/prisma";
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import { ollamaEmbeddings } from "./embeddings/ollamaEmbeddings";
 
 export async function initializePrismaDB() {
 	const prisma = new PrismaClient();
 
-	const embeddings = new HuggingFaceInferenceEmbeddings({
-		apiKey: process.env.HUGGINGFACEHUB_API_KEY,
-	});
+	const embeddings = ollamaEmbeddings;
 
 	const db = PrismaVectorStore.withModel<prismaLangChain>(prisma).create(
 		embeddings,
@@ -18,10 +16,9 @@ export async function initializePrismaDB() {
 			columns: {
 				id: PrismaVectorStore.IdColumn,
 				content: PrismaVectorStore.ContentColumn,
-				
 			},
 		}
 	);
 
-	return db
+	return db;
 }

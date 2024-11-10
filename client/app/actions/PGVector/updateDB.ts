@@ -6,7 +6,7 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Chunk } from "@/lib/types";
 import { v4 as uuidv4 } from "uuid";
 import getChunkIds from "./getChunkIds";
-import initializeDB from "./initializeDB";
+import initializeDB from "./PGVector/initializeDB";
 import queryDB from "./queryDB";
 import { initializePrismaDB } from "./initializePrismaDB";
 

@@ -1,17 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model langchain2 {
-  id       String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  content  String?
-  metadata Json?
-  vector   Unsupported("vector")?
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector, uuidOssp(map: "uuid-ossp")]
 }
 
 model prismaLangChain {
