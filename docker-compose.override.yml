@@ -1,0 +1,12 @@
+services:
+  client:
+    build:
+      context: .
+      target: dev  # We'll add this target to Dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules  # Prevent overwriting node_modules
+      - /app/.next         # Prevent overwriting .next build cache
+    command: npm run dev
+    environment:
+      - NODE_ENV=development

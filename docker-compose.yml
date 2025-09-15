@@ -1,18 +1,87 @@
-version: '3.8'
-
 services:
-  server:
-    build:
-      context: ./server
-    ports:
-      - "8080:8080"  # Expose Flask port
-    volumes:
-      - ./server:/app  # Bind mount for local development
+    db:
+        image: ankane/pgvector
+        container_name: postgres_vector_container
+        ports:
+            - ${PORT}:5432
+        volumes:
+            - db:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
 
-  client:
-    build:
-      context: ./client
-    ports:
-      - "3000:3000"  # Expose Next.js port
-    volumes:
-      - ./client:/app  # Bind mount for local development
+    ollama:
+        image: ollama/ollama:latest
+        container_name: ollama_container
+        ports:
+            - "11434:11434"
+        volumes:
+            - ollama:/root/.ollama
+        environment:
+            - OLLAMA_HOST=0.0.0.0
+        restart: unless-stopped
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities: [gpu]
+
+    ollama-init:
+        image: curlimages/curl:latest
+        container_name: ollama_init_container
+        depends_on:
+            - ollama
+        volumes:
+            - ./init-ollama.sh:/init-ollama.sh
+        command: sh /init-ollama.sh
+        restart: "no"
+
+    # ragas:
+    #     build:
+    #         context: ./evaluation-service # 👈 path to your Python service
+    #     container_name: ragas_service_container
+    #     ports:
+    #         - "8000:8000"
+    #     environment:
+    #         - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    #         - OLLAMA_URL=http://ollama:11434
+    #     depends_on:
+    #         - db
+    #         - ollama
+
+    client:
+        build:
+            context: .
+            # target: ${NODE_ENV:-prod} # 👈 switch build stage (dev or prod)
+        container_name: nextjs_client_container
+        ports:
+            - "3000:3000"
+        environment:
+            - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+            - OLLAMA_URL=http://ollama:11434
+            - RAGAS_SERVICE_URL=http://host.docker.internal:8000
+            - DOCKER_ENV=true
+        depends_on:
+            - db
+            - ollama-init
+        volumes:
+            # Mount only in dev mode
+            - type: bind
+              source: .
+              target: /app
+              consistency: cached
+            - /app/node_modules
+            # Mount PDF directory
+            - type: bind
+              source: "C:/Users/cokin/OneDrive/Documents/Projects/Local LLM/Specs/PDF"
+              target: /app/pdf-data
+        working_dir: /app
+        command: sh -c "npm install && npm run dev"
+        # profiles: ["dev", "prod"]
+
+volumes:
+    db:
+    ollama:

@@ -1,41 +1,40 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-client/node_modules
-client/.pnp
-clien/.pnp.js
-clien/.yarn/install-state.gz
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
 
 # testing
-client/coverage
+/coverage
 
 # next.js
-client/.next/
-client/out/
+/.next/
+/out/
+
+# Python server
+/evaluation-service/venv
 
 # production
-client/build
+/build
 
 # misc
-client/.DS_Store
-client/*.pem
+.DS_Store
+*.pem
 
 # debug
-client/npm-debug.log*
-client/yarn-debug.log*
-client/yarn-error.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # local env files
-client/.env*.local
-client/.env
+.env*.local
+.env
 
 # vercel
-client/.vercel
+.vercel
 
 # typescript
-client/*.tsbuildinfo
-client/next-env.d.ts
-
-server/venv
-server/models
-server/llama-cpp-python
+*.tsbuildinfo
+next-env.d.ts
